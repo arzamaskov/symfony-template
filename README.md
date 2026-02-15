@@ -18,9 +18,18 @@ cp docker-compose.override.yml.dist docker-compose.override.yml
 # Собрать образы и запустить
 make build
 make up
+
+# Установить зависимости
+make composer args="install"
 ```
 
 Приложение будет доступно по адресу: http://localhost:8080
+
+## Требования
+
+- Docker >= 24.0
+- Docker Compose >= 2.20
+- Make
 
 ## Makefile-команды
 
