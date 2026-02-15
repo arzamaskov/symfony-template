@@ -47,6 +47,11 @@ make composer args="install"
 | `make sf args="..."` | Запуск Symfony Console |
 | `make db` | psql в postgres контейнере |
 | `make cache-clear` | Очистка кэша Symfony |
+| `make lint` | Проверка code style (dry-run) |
+| `make lint-fix` | Автоисправление code style |
+| `make phpstan` | Статический анализ (PHPStan) |
+| `make test` | Запуск тестов (PHPUnit) |
+| `make qa` | Все проверки: lint + phpstan + test |
 
 ## Docker-архитектура
 

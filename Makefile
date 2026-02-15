@@ -2,7 +2,7 @@ DOCKER_COMPOSE = docker compose
 PHP_CONTAINER  = php-fpm
 DB_CONTAINER   = postgres
 
-.PHONY: help build up down restart logs shell composer sf db cache-clear ps
+.PHONY: help build up down restart logs shell composer sf db cache-clear ps lint lint-fix phpstan test qa
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -41,3 +41,19 @@ db: ## Open psql in postgres container
 
 cache-clear: ## Clear Symfony cache
 	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) php bin/console cache:clear
+
+## ---- Quality & Testing ----
+
+lint: ## Run PHP-CS-Fixer in dry-run mode
+	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) vendor/bin/php-cs-fixer fix --dry-run --diff
+
+lint-fix: ## Fix code style with PHP-CS-Fixer
+	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) vendor/bin/php-cs-fixer fix
+
+phpstan: ## Run PHPStan static analysis
+	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) vendor/bin/phpstan analyse
+
+test: ## Run PHPUnit tests
+	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) bin/phpunit
+
+qa: lint phpstan test ## Run all quality checks (lint + phpstan + tests)
