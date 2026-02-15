@@ -1,0 +1,19 @@
+services:
+  php-fpm:
+    build:
+      target: dev
+    volumes:
+      - ./:/app
+    environment:
+      XDEBUG_MODE: debug
+      PHP_IDE_CONFIG: "serverName=symfony"
+
+  nginx:
+    ports:
+      - "8080:80"
+    volumes:
+      - ./public:/app/public:ro
+
+  postgres:
+    ports:
+      - "5432:5432"

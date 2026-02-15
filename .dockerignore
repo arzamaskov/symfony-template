@@ -1,0 +1,11 @@
+.git
+.idea
+.vscode
+docker-compose.override.yml
+Makefile
+var/
+vendor/
+node_modules/
+*.md
+.env.local
+.env.*.local
