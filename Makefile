@@ -2,7 +2,7 @@ DOCKER_COMPOSE = docker compose
 PHP_CONTAINER  = php-fpm
 DB_CONTAINER   = postgres
 
-.PHONY: help build up down restart logs shell composer sf db cache-clear ps lint lint-fix phpstan test qa
+.PHONY: help build up down restart logs shell composer sf db cache-clear ps lint lint-fix phpstan deptrac test qa
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -53,7 +53,10 @@ lint-fix: ## Fix code style with PHP-CS-Fixer
 phpstan: ## Run PHPStan static analysis
 	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) vendor/bin/phpstan analyse
 
+deptrac: ## Run architecture dependency checks (Deptrac)
+	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) vendor/bin/deptrac analyse
+
 test: ## Run PHPUnit tests
 	$(DOCKER_COMPOSE) exec $(PHP_CONTAINER) bin/phpunit
 
-qa: lint phpstan test ## Run all quality checks (lint + phpstan + tests)
+qa: lint phpstan deptrac test ## Run all quality checks (lint + phpstan + deptrac + tests)

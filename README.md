@@ -51,7 +51,31 @@ make composer args="install"
 | `make lint-fix` | Автоисправление code style |
 | `make phpstan` | Статический анализ (PHPStan) |
 | `make test` | Запуск тестов (PHPUnit) |
-| `make qa` | Все проверки: lint + phpstan + test |
+| `make deptrac` | Проверка архитектурных зависимостей (Deptrac) |
+| `make qa` | Все проверки: lint + phpstan + deptrac + test |
+
+## Hexagonal / DDD архитектура
+
+Проект организован по модулям (Bounded Contexts). Каждый модуль содержит 4 слоя:
+
+```
+src/{ModuleName}/
+├── Domain/           # Сущности, Value Objects, интерфейсы репозиториев, доменные события
+├── Application/      # Use Cases (Command/Query handlers), DTO, порты
+├── Infrastructure/   # Реализации репозиториев, адаптеры внешних сервисов
+└── Presentation/     # HTTP-контроллеры, Request DTO
+```
+
+### Правила зависимостей
+
+```
+Domain          → (ничего — изолирован)
+Application     → Domain
+Infrastructure  → Domain, Application
+Presentation    → Application
+```
+
+Зависимости контролируются через [Deptrac](https://github.com/deptrac/deptrac) (`make deptrac`).
 
 ## Docker-архитектура
 
